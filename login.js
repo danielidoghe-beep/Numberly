@@ -12,7 +12,9 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-auth.js";
 
+// ==========================
 // Elements
+// ==========================
 
 const loginForm = document.getElementById("loginForm");
 const googleLogin = document.getElementById("googleLogin");
@@ -21,14 +23,18 @@ const email = document.getElementById("email");
 const password = document.getElementById("password");
 
 const remember = document.getElementById("remember");
-
 const togglePassword = document.getElementById("togglePassword");
 
+const loginMessage = document.getElementById("loginMessage");
+const signInBtn = document.querySelector(".signin-btn");
+
+// ==========================
 // Already Logged In
+// ==========================
 
-onAuthStateChanged(auth, (user)=>{
+onAuthStateChanged(auth, (user) => {
 
-    if(user){
+    if (user) {
 
         window.location.href = "dashboard.html";
 
@@ -36,18 +42,20 @@ onAuthStateChanged(auth, (user)=>{
 
 });
 
+// ==========================
 // Show / Hide Password
+// ==========================
 
-togglePassword.addEventListener("click", ()=>{
+togglePassword.addEventListener("click", () => {
 
-    if(password.type === "password"){
+    if (password.type === "password") {
 
         password.type = "text";
 
         togglePassword.classList.remove("fa-eye");
         togglePassword.classList.add("fa-eye-slash");
 
-    }else{
+    } else {
 
         password.type = "password";
 
@@ -58,27 +66,29 @@ togglePassword.addEventListener("click", ()=>{
 
 });
 
+// ==========================
 // Email Login
+// ==========================
 
-loginForm.addEventListener("submit", async(e)=>{
+loginForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    try{
+    loginMessage.style.display = "none";
+    loginMessage.className = "message";
 
-        if(remember.checked){
+    signInBtn.disabled = true;
+    signInBtn.textContent = "Signing in...";
 
-            await setPersistence(
-                auth,
-                browserLocalPersistence
-            );
+    try {
 
-        }else{
+        if (remember.checked) {
 
-            await setPersistence(
-                auth,
-                browserSessionPersistence
-            );
+            await setPersistence(auth, browserLocalPersistence);
+
+        } else {
+
+            await setPersistence(auth, browserSessionPersistence);
 
         }
 
@@ -92,39 +102,84 @@ loginForm.addEventListener("submit", async(e)=>{
 
         );
 
-        alert("Login successful");
+        loginMessage.className = "message success";
+        loginMessage.style.display = "block";
+        loginMessage.textContent = "Login successful! Redirecting...";
 
-        window.location.href = "dashboard.html";
+        setTimeout(() => {
 
-    }catch(error){
+            window.location.href = "dashboard.html";
 
-        alert(error.message);
+        }, 1500);
+
+    } catch (error) {
+
+        let message = "";
+
+        switch (error.code) {
+
+            case "auth/user-not-found":
+            case "auth/wrong-password":
+            case "auth/invalid-credential":
+                message = "Invalid email or password";
+                break;
+
+            case "auth/invalid-email":
+                message = "Please enter a valid email address.";
+                break;
+
+            case "auth/too-many-requests":
+                message = "Too many login attempts. Try again later.";
+                break;
+
+            default:
+                message = error.message;
+
+        }
+
+        loginMessage.className = "message error";
+        loginMessage.style.display = "block";
+        loginMessage.textContent = message;
+
+        signInBtn.disabled = false;
+        signInBtn.textContent = "Sign in";
 
     }
 
 });
 
+// ==========================
 // Google Login
+// ==========================
 
-googleLogin.addEventListener("click", async()=>{
+googleLogin.addEventListener("click", async () => {
 
-    try{
+    loginMessage.style.display = "none";
+    loginMessage.className = "message";
 
-        await signInWithPopup(
+    googleLogin.disabled = true;
 
-            auth,
+    try {
 
-            provider
+        await signInWithPopup(auth, provider);
 
-        );
+        loginMessage.className = "message success";
+        loginMessage.style.display = "block";
+        loginMessage.textContent = "Login successful! Redirecting...";
 
-        window.location.href = "dashboard.html";
+        setTimeout(() => {
 
-    }
+            window.location.href = "dashboard.html";
 
-    catch(error){
+        }, 1500);
 
-        alert(error.message);
+    } catch (error) {
+
+        loginMessage.className = "message error";
+        loginMessage.style.display = "block";
+        loginMessage.textContent = error.message;
+
+        googleLogin.disabled = false;
 
     }
 
