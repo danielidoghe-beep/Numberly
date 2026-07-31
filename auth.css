@@ -364,3 +364,80 @@ body{
     border:2px solid #f87171;
     color:#991b1b;
 }
+/* ===========================================
+   REGISTER PAGE
+=========================================== */
+
+.name-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:4px;
+}
+
+.name-row .input-group{
+    margin-bottom:22px;
+}
+
+.name-row input{
+    width:100%;
+}
+
+/* Message Box */
+
+.message{
+    display:none;
+    width:100%;
+    padding:18px 20px;
+    border-radius:14px;
+    margin-bottom:25px;
+    font-size:16px;
+    font-weight:500;
+    line-height:1.5;
+}
+
+.message.success{
+    display:block;
+    background:#dcfce7;
+    border:2px solid #4ade80;
+    color:#166534;
+}
+
+.message.error{
+    display:block;
+    background:#fee2e2;
+    border:2px solid #f87171;
+    color:#991b1b;
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.name-row{
+
+    grid-template-columns:1fr 1fr;
+
+    gap:16px;
+
+}
+
+}
+
+@media(max-width:500px){
+
+.name-row{
+
+    grid-template-columns:1fr 1fr;
+
+    gap:14px;
+
+}
+
+.name-row .input-group{
+
+    margin-bottom:18px;
+
+}
+
+}
