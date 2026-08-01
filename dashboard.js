@@ -113,7 +113,14 @@ function loadDashboard(user){
         // User Name
         // ==========================
 
-        const firstName = data.firstName || "User";
+        const firstName =
+
+    data.firstName ||
+
+    (user.email
+        ? user.email.split("@")[0].charAt(0).toUpperCase() +
+          user.email.split("@")[0].slice(1)
+        : "User");
 
         userFirstName.textContent = firstName;
 
