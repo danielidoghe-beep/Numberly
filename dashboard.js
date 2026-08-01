@@ -17,8 +17,8 @@ import {
     orderBy,
     limit,
     getDocs,
-    updateDoc
-writeBatch
+    updateDoc,
+    writeBatch
 } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
 
 // ======================================
@@ -164,11 +164,6 @@ function loadDashboard(user){
 
     });
 
-    // Load Notifications
-
-    loadNotifications(user.uid);
-
-}
 // ======================================
 // LOAD NOTIFICATIONS
 // ======================================
