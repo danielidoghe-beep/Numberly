@@ -246,21 +246,51 @@ googleRegister.addEventListener("click", async () => {
 
         const user = result.user;
 
-        const names = (user.displayName || "").trim().split(" ");
+        // Get the username from the email address
 
-        const first = names[0] || "";
+const emailUsername = user.email
+    .split("@")[0]
+    .trim();
 
-        const last = names.slice(1).join(" ");
+// Capitalize the first letter
 
-        await setDoc(doc(db, "users", user.uid), {
+const firstName =
 
-            uid: user.uid,
+    emailUsername.charAt(0).toUpperCase() +
 
-            firstName: first,
+    emailUsername.slice(1);
 
-            lastName: last,
+await setDoc(doc(db, "users", user.uid), {
 
-            fullName: user.displayName || "",
+    uid: user.uid,
+
+    firstName: firstName,
+
+    lastName: "",
+
+    fullName: user.displayName || "",
+
+    email: user.email,
+
+    walletBalance: 0,
+
+    purchaseCount: 0,
+
+    availableLogs: 0,
+
+    availableTools: 0,
+
+    status: "active",
+
+    profilePhoto: user.photoURL || "",
+
+    createdAt: serverTimestamp()
+
+}, {
+
+    merge: true
+
+});
 
             email: user.email || "",
 
