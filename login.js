@@ -1,8 +1,13 @@
 import {
     auth,
-    provider
+    db,
+    provider,
+    serverTimestamp
 } from "./firebase.js";
-
+import {
+    collection,
+    addDoc
+} from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
 import {
     signInWithEmailAndPassword,
     signInWithPopup,
@@ -92,15 +97,31 @@ loginForm.addEventListener("submit", async (e) => {
 
         }
 
-        await signInWithEmailAndPassword(
+        const userCredential = await signInWithEmailAndPassword(
 
-            auth,
+    auth,
 
-            email.value.trim(),
+    email.value.trim(),
 
-            password.value
+    password.value
 
-        );
+);
+
+const user = userCredential.user;
+
+await addDoc(collection(db, "notifications"), {
+
+    uid: user.uid,
+
+    title: "Successful Login",
+
+    message: "You signed in to your Numberly account successfully.",
+
+    read: false,
+
+    createdAt: serverTimestamp()
+
+});
 
         loginMessage.className = "message success";
         loginMessage.style.display = "block";
@@ -161,7 +182,29 @@ googleLogin.addEventListener("click", async () => {
 
     try {
 
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(
+
+    auth,
+
+    provider
+
+);
+
+const user = result.user;
+
+await addDoc(collection(db, "notifications"), {
+
+    uid: user.uid,
+
+    title: "Successful Login",
+
+    message: "You signed in to your Numberly account successfully.",
+
+    read: false,
+
+    createdAt: serverTimestamp()
+
+});
 
         loginMessage.className = "message success";
         loginMessage.style.display = "block";
