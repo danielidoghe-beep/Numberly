@@ -99,7 +99,7 @@ onAuthStateChanged(auth, (user)=>{
 // LOAD DASHBOARD
 // ======================================
 
-function loadDashboard(user){
+function loadUserData(user){
 
     const userRef = doc(db,"users",user.uid);
 
