@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard | Numberly</title>
+
+<link rel="stylesheet" href="dashboard.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<!-- ===========================
+HEADER
+=========================== -->
+
+<header class="topbar">
+
+<button id="menuBtn" class="icon-btn">
+<i class="fa-solid fa-bars"></i>
+</button>
+
+<div class="wallet-pill">
+<span id="walletHeaderBalance">₦0</span>
+</div>
+
+<button id="themeBtn" class="icon-btn">
+<i class="fa-regular fa-moon"></i>
+</button>
+
+<div class="notification-wrapper">
+
+<button id="notificationBtn" class="icon-btn notification-btn">
+
+<i class="fa-regular fa-bell"></i>
+
+<span id="notificationBadge"
+class="notification-badge"
+style="display:none;">0</span>
+
+</button>
+
+<!-- Notification Dropdown -->
+
+<div id="notificationDropdown"
+class="notification-dropdown"
+style="display:none;">
+
+<div class="notification-header">
+
+<h3>Notifications</h3>
+
+<button id="markAllRead">
+Mark all read
+</button>
+
+</div>
+
+<div id="recentNotifications">
+
+<!-- Firebase Notifications -->
+
+</div>
+
+<div class="notification-footer">
+
+<a href="notifications.html">
+
+View all notifications
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="profile-circle">
+
+<span id="profileInitial">
+
+D
+
+</span>
+
+</div>
+
+</header>
+
+<!-- ===========================
+SIDEBAR
+=========================== -->
+
+<aside id="sidebar" class="sidebar">
+
+<!-- Part 2 -->
+
+</aside>
+
+<!-- ===========================
+MAIN CONTENT
+=========================== -->
+
+<main class="dashboard">
+
+<section class="welcome">
+
+<h1>
+
+Welcome back,
+
+<span id="userFirstName">
+
+Loading...
+
+</span>
+
+👋
+
+</h1>
+
+<p>
+
+Here's what's going on with your account
+
+</p>
+
+</section>
+
+<!-- Wallet -->
+
+<section class="dashboard-card">
+
+<p class="card-title">
+
+Wallet balance
+
+</p>
+
+<h2 id="walletBalance">
+
+₦0
+
+</h2>
+
+<a href="wallet.html">
+
+View wallet
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</section>
+
+<!-- Purchases -->
+
+<section class="dashboard-card">
+
+<p class="card-title">
+
+Total purchases
+
+</p>
+
+<h2 id="purchaseCount">
+
+No purchases yet
+
+</h2>
+
+<a href="orders.html">
+
+View orders
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</a>
+
+</section>
+
+<!-- Inventory -->
+
+<section class="dashboard-card">
+
+<p class="card-title">
+
+Available inventory
+
+</p>
+
+<h2 id="inventoryCount">
+
+0
+
+</h2>
+
+<p id="inventoryBreakdown">
+
+0 logs • 0 tools
+
+</p>
+
+</section>
+<!-- ===========================
+QUICK ACTIONS
+=========================== -->
+
+<section class="quick-actions">
+
+<h2 class="section-title">
+
+QUICK ACTIONS
+
+</h2>
+
+<div class="quick-grid">
+
+<a href="logs.html" class="quick-card">
+
+<div class="quick-icon blue">
+
+<i class="fa-regular fa-cube"></i>
+
+</div>
+
+<h3>Buy Logs</h3>
+
+<p>
+
+Social media accounts, VPNs, proxies, etc.
+
+</p>
+
+</a>
+
+<a href="tools.html" class="quick-card">
+
+<div class="quick-icon purple">
+
+<i class="fa-solid fa-wrench"></i>
+
+</div>
+
+<h3>Buy Tools</h3>
+
+<p>
+
+Updates & pictures
+
+</p>
+
+</a>
+
+<a href="wallet.html" class="quick-card">
+
+<div class="quick-icon green">
+
+<i class="fa-regular fa-credit-card"></i>
+
+</div>
+
+<h3>Top Up Wallet</h3>
+
+<p>
+
+Add funds to your balance
+
+</p>
+
+</a>
+
+<a href="support.html" class="quick-card">
+
+<div class="quick-icon orange">
+
+<i class="fa-regular fa-life-ring"></i>
+
+</div>
+
+<h3>Get Support</h3>
+
+<p>
+
+Open a support ticket and chat with our team
+
+</p>
+
+</a>
+
+</div>
+
+</section>
+
+<!-- ===========================
+SUPPORT TICKETS
+=========================== -->
+
+<section class="support-section">
+
+<h2 class="section-title">
+
+SUPPORT TICKETS
+
+</h2>
+
+<div class="support-card">
+
+<div class="support-message">
+
+Manage your support tickets in the dedicated support page.
+
+</div>
+
+<a href="support.html" class="support-btn">
+
+GO TO SUPPORT
+
+</a>
+
+</div>
+
+</section>
+
+<!-- ===========================
+RECENT ORDERS
+=========================== -->
+
+<section class="orders-section">
+
+<div class="section-header">
+
+<h2>
+
+RECENT ORDERS
+
+</h2>
+
+<a href="orders.html">
+
+VIEW ALL
+
+</a>
+
+</div>
+
+<div id="recentOrders">
+
+<!-- Firebase Recent Orders -->
+
+<div class="empty-orders">
+
+<div class="empty-icon">
+
+<i class="fa-regular fa-clock"></i>
+
+</div>
+
+<div>
+
+<h3>
+
+No recent orders
+
+</h3>
+
+<p>
+
+You haven't made any purchases yet — browse the store to get started.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+<!-- ===========================
+NEED HELP
+=========================== -->
+
+<section class="help-section">
+
+<h2 class="section-title">
+
+NEED HELP?
+
+</h2>
+
+<div class="help-card">
+
+<div>
+
+<h3>
+
+Need assistance?
+
+</h3>
+
+<p>
+
+Our support team is available to help you with orders, wallet issues and account questions.
+
+</p>
+
+</div>
+
+<a href="support.html" class="help-btn">
+
+CONTACT SUPPORT
+
+</a>
+
+</div>
+
+</section>
+
+<!-- ===========================
+FOOTER
+=========================== -->
+
+<footer class="dashboard-footer">
+
+<p>
+
+© <span id="currentYear"></span> Numberly. All rights reserved.
+
+</p>
+
+</footer>
+
+</main>
+
+</body>
+
+</html>
