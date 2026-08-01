@@ -14,20 +14,25 @@ import {
 
 import {
     doc,
-    setDoc
+    setDoc,
+    collection,
+    addDoc
 } from "https://www.gstatic.com/firebasejs/12.17.0/firebase-firestore.js";
 
-// ======================
+// =====================================
 // Elements
-// ======================
+// =====================================
 
 const registerForm = document.getElementById("registerForm");
+
 const googleRegister = document.getElementById("googleRegister");
 
 const firstName = document.getElementById("firstName");
+
 const lastName = document.getElementById("lastName");
 
 const email = document.getElementById("email");
+
 const password = document.getElementById("password");
 
 const togglePassword = document.getElementById("togglePassword");
@@ -36,23 +41,23 @@ const registerMessage = document.getElementById("registerMessage");
 
 const createBtn = document.querySelector(".signin-btn");
 
-// ======================
+// =====================================
 // Already Logged In
-// ======================
+// =====================================
 
 onAuthStateChanged(auth, (user) => {
 
     if (user) {
 
-        window.location.href = "dashboard.html";
+        window.location.replace("dashboard.html");
 
     }
 
 });
 
-// ======================
-// Password Toggle
-// ======================
+// =====================================
+// Show / Hide Password
+// =====================================
 
 togglePassword.addEventListener("click", () => {
 
@@ -60,30 +65,36 @@ togglePassword.addEventListener("click", () => {
 
         password.type = "text";
 
-        togglePassword.classList.replace("fa-eye", "fa-eye-slash");
+        togglePassword.classList.remove("fa-eye");
+
+        togglePassword.classList.add("fa-eye-slash");
 
     } else {
 
         password.type = "password";
 
-        togglePassword.classList.replace("fa-eye-slash", "fa-eye");
+        togglePassword.classList.remove("fa-eye-slash");
+
+        togglePassword.classList.add("fa-eye");
 
     }
 
 });
 
-// ======================
-// Register With Email
-// ======================
+// =====================================
+// Email Registration
+// =====================================
 
 registerForm.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
     registerMessage.style.display = "none";
+
     registerMessage.className = "message";
 
     createBtn.disabled = true;
+
     createBtn.textContent = "Creating account...";
 
     try {
@@ -101,13 +112,16 @@ registerForm.addEventListener("submit", async (e) => {
         const user = userCredential.user;
 
         const fullName =
-            firstName.value.trim() + " " + lastName.value.trim();
+            `${firstName.value.trim()} ${lastName.value.trim()}`;
 
         await updateProfile(user, {
 
             displayName: fullName
 
         });
+                // =====================================
+        // Save User To Firestore
+        // =====================================
 
         await setDoc(doc(db, "users", user.uid), {
 
@@ -121,20 +135,48 @@ registerForm.addEventListener("submit", async (e) => {
 
             email: email.value.trim(),
 
-            balance: 0,
+            phone: "",
+
+            walletBalance: 0,
+
+            purchaseCount: 0,
+
+            availableLogs: 0,
+
+            availableTools: 0,
 
             totalOrders: 0,
 
+            profilePhoto: "",
+
             status: "active",
 
-            profilePhoto: "",
+            createdAt: serverTimestamp()
+
+        });
+
+        // =====================================
+        // Welcome Notification
+        // =====================================
+
+        await addDoc(collection(db, "notifications"), {
+
+            uid: user.uid,
+
+            title: "Account Created",
+
+            message: "Welcome to Numberly. Your account has been created successfully.",
+
+            read: false,
 
             createdAt: serverTimestamp()
 
         });
 
         registerMessage.className = "message success";
+
         registerMessage.style.display = "block";
+
         registerMessage.textContent =
             "Account created successfully! Redirecting...";
 
@@ -168,52 +210,75 @@ registerForm.addEventListener("submit", async (e) => {
         }
 
         registerMessage.className = "message error";
+
         registerMessage.style.display = "block";
+
         registerMessage.textContent = msg;
 
         createBtn.disabled = false;
+
         createBtn.textContent = "Create account";
 
     }
 
 });
-
-// ======================
+// =====================================
 // Google Sign Up
-// ======================
+// =====================================
 
 googleRegister.addEventListener("click", async () => {
 
     registerMessage.style.display = "none";
+
     registerMessage.className = "message";
+
+    googleRegister.disabled = true;
 
     try {
 
-        const result = await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(
+
+            auth,
+
+            provider
+
+        );
 
         const user = result.user;
 
-        const names = (user.displayName || "").split(" ");
+        const names = (user.displayName || "").trim().split(" ");
+
+        const first = names[0] || "";
+
+        const last = names.slice(1).join(" ");
 
         await setDoc(doc(db, "users", user.uid), {
 
             uid: user.uid,
 
-            firstName: names[0] || "",
+            firstName: first,
 
-            lastName: names.slice(1).join(" ") || "",
+            lastName: last,
 
             fullName: user.displayName || "",
 
-            email: user.email,
+            email: user.email || "",
 
-            balance: 0,
+            phone: "",
+
+            walletBalance: 0,
+
+            purchaseCount: 0,
+
+            availableLogs: 0,
+
+            availableTools: 0,
 
             totalOrders: 0,
 
-            status: "active",
-
             profilePhoto: user.photoURL || "",
+
+            status: "active",
 
             createdAt: serverTimestamp()
 
@@ -223,8 +288,24 @@ googleRegister.addEventListener("click", async () => {
 
         });
 
+        await addDoc(collection(db, "notifications"), {
+
+            uid: user.uid,
+
+            title: "Account Created",
+
+            message: "Welcome to Numberly. Your account has been created successfully.",
+
+            read: false,
+
+            createdAt: serverTimestamp()
+
+        });
+
         registerMessage.className = "message success";
+
         registerMessage.style.display = "block";
+
         registerMessage.textContent =
             "Account created successfully! Redirecting...";
 
@@ -236,9 +317,30 @@ googleRegister.addEventListener("click", async () => {
 
     } catch (error) {
 
+        let message = "";
+
+        switch (error.code) {
+
+            case "auth/popup-closed-by-user":
+                message = "Google sign up was cancelled.";
+                break;
+
+            case "auth/popup-blocked":
+                message = "Popup was blocked by your browser.";
+                break;
+
+            default:
+                message = error.message;
+
+        }
+
         registerMessage.className = "message error";
+
         registerMessage.style.display = "block";
-        registerMessage.textContent = error.message;
+
+        registerMessage.textContent = message;
+
+        googleRegister.disabled = false;
 
     }
 
